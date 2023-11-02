@@ -13,9 +13,14 @@ Vp= 0
 Va = 0
 I1=0
 I2=0
-Ki1=2.5#10
-Ki2=0.1#1.5
-
+kp1 =70
+kp2 = -25
+kd1 = 0
+kd2 = 0
+Ki1=8 #2.5#10
+Ki2=-0.1 #0.1#1.5
+last_yaw = 0
+Vyaw = 0
 # You can add variables here 
 # as required by your implementation.
 ###################################
@@ -33,7 +38,7 @@ def sysCall_init():
     base = sim.getObjectHandle("reference_frame")
     bike = sim.getObjectHandle('bike_respondable')
     motor = sim.getObjectHandle('front_motor')
-    sim.setJointTargetForce(motor , 5)
+    sim.setJointTargetForce(motor , 50)
 
     pass
 
@@ -56,17 +61,12 @@ def sysCall_actuation():
     #   Set_joint_actuation(U);                     # Provide this calculated input to system's actuator
 
     #################################
-    global e1, e2, Vp, Va, Ki1, Ki2, I1, I2
-    kp1 =70
-    kp2 = 50
-    kd1 = 0
-    kd2 = 0
- 
-    
-    U = kp1*e1 +kp2*e2 - kd1*Vp - kd2*Va+ I1+I2
+    global e1, e2, Vyaw, Ki1, Ki2, I1, I2
+
+    U = kp1*e1 +kp2*e2  + kd2*Vyaw+ I1+I2
     print(U)
     
-    sim.setJointTargetVelocity(motor, 4*U)
+    sim.setJointTargetVelocity(motor, U)
 
     pass
 
@@ -79,25 +79,26 @@ def sysCall_sensing():
     
     #################################
         #################################
-    global bike, motor, e1, e2 , I1,I2,Ki1, Ki2, dt
-    yawpoint = 0
+    global bike, motor, e1, e2 , I1,I2,Ki1, Ki2, dt, last_yaw, Vyaw
+    yawpoint = 1.5
     dt=sim.getSimulationTime()
     # t = sim.getJointPosition(elbow)
     # a = sim.getJointPosition(pivot)
     _,a,t = sim.getObjectOrientation(bike, base)
     y,p,r = sim.alphaBetaGammaToYawPitchRoll(_,a,t)
-   
+    print(e1)
     print([y,p,r])
-    # print("t")
-    # print(t)
-    # print("a")
-    # print(a)
-    # Vp = sim.getJointVelocity(elbow)
-    # Va= sim.getJointVelocity(pivot)
+    print([180*y/math.pi,180*p/math.pi,180*r/math.pi])
+    
+    if yawpoint > math.pi:
+        yawpoint= yawpoint - 2*math.pi
     e1 = p
     e2 = yawpoint+ y
+    Vyaw = e2 - last_yaw
+    
     I1=(I1 + Ki1*dt*e1)
     I2=(I2 + Ki2*dt*e2)
+    last_yaw = e2
     pass
 
 def sysCall_cleanup():
