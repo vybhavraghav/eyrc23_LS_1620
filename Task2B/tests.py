@@ -9,7 +9,7 @@ def sysCall_init():
 def sysCall_actuation():
     # put your actuation code here
     print('Vel')
-    sim.setJointTargetVelocity(sim.getObjectHandle('front_motor'), 10)
+    sim.setJointTargetVelocity(sim.getObjectHandle('front_motor'), 2)
     
 
     pass
@@ -37,7 +37,8 @@ def sysCall_sensing():
  
     y,p,r = sim.alphaBetaGammaToYawPitchRoll(_,a,t)
     #print([180*_/math.pi,180*a/math.pi,180*t/math.pi])
-    print([180*y/math.pi,180*p/math.pi,180*r/math.pi])
+    #print([180*y/math.pi,180*p/math.pi,180*r/math.pi])
+    print([y,p,r])
     pass
 
 def sysCall_cleanup():
