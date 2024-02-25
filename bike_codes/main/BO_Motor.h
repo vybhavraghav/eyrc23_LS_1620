@@ -36,7 +36,7 @@ void forward(){
       forward()
 */
 
-  analogWrite(enB, 100);
+  analogWrite(enB, 175);
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);  
 }
@@ -50,7 +50,7 @@ void backward(){
     example:
       backward()
 */
-  analogWrite(enB, 100);
+  analogWrite(enB, 175);
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);  
 }
