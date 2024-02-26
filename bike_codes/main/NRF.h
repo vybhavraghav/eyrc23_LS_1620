@@ -3,8 +3,9 @@
 */
 
 #include <SPI.h>
-#include <RF24.h>
 #include "BO_Motor.h"
+#include <RF24.h>
+int Sw = 0;
 
 
 const byte add_1 = 5;
@@ -57,7 +58,7 @@ void traversal(){
     radio.write(&msg, sizeof(msg));
 
     int x_value, y_value;
-    sscanf(received_data, "%d,%d", &x_value, &y_value);
+    sscanf(received_data, "%d,%d,%d", &x_value, &y_value, &Sw);
 
     // Serial.print("x_value\t");
     // Serial.println(x_value);
@@ -78,6 +79,19 @@ void traversal(){
     }
     else if(y_value<300){
       setpoint--;
+    }
+
+    if (Sw == 1){
+
+        int start = millis();
+        int now = millis();
+        while(now - start< 5000){
+          mpu.update();
+          pid();
+          tone(7, 4000);
+          now = millis();
+
+        }
     }
 
     

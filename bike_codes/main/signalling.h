@@ -70,7 +70,7 @@ void checkNS(){
     while(now - start< 3000){
       mpu.update();
       pid();
-      red();
+      green();
       if(now- start > 1000 && now - start < 2000)
       noTone(buzzer);
       else

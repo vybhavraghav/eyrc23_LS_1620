@@ -36,7 +36,7 @@ void forward(){
       forward()
 */
 
-  analogWrite(enB, 175);
+  analogWrite(enB, 205);
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);  
 }
