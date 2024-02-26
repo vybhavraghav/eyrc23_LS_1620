@@ -50,7 +50,7 @@ void backward(){
     example:
       backward()
 */
-  analogWrite(enB, 175);
+  analogWrite(enB, 205);
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);  
 }

@@ -4,6 +4,7 @@
 #include "DC_Motor.h"
 #include "PID.h"
 #include "NRF.h"
+#include "signalling.h"
 
 
 int Sw = 0;
@@ -13,6 +14,7 @@ void setup() {
   dc_motor_init();
   Serial.begin(9600);
   Wire.begin();
+  signals_init();
   
   byte status = mpu.begin();
   Serial.print(F("MPU6050 status: "));
@@ -43,7 +45,7 @@ void setup() {
 
   // mpu.calcOffsets();
 
-  // // mpu.calcOffsets();
+  // mpu.calcOffsets();
   // Serial.print("AccX:");Serial.print(mpu.getAccXoffset());
   // Serial.print("\tAccY:");Serial.print(mpu.getAccYoffset());
   // Serial.print("\tAccZ:");Serial.print(mpu.getAccZoffset());
@@ -56,10 +58,11 @@ void setup() {
   // AccX:-0.01	AccY:-0.03	AccZ:0.11	GyX:-7.13	Gyy:0.77	GyZ:0.23
   // AccX:0.01	AccY:0.01	AccZ:0.10	GyX:-6.92	Gyy:0.53	GyZ:0.05
   // AccX:-0.01	AccY:-0.06	AccZ:0.04	GyX:-5.93	Gyy:0.81	GyZ:0.28
+  // AccX:-0.00	AccY:-0.01	AccZ:0.05	GyX:-6.26	Gyy:0.85	GyZ:0.29
 
 
-  mpu.setAccOffsets(0.01, -0.06, 0);
-  mpu.setGyroOffsets(-5.93,0.81, 0);
+  mpu.setAccOffsets(0.00, -0.01, 0.05);
+  mpu.setGyroOffsets(-6.26,0.85, 0.29);
 
   // mpu.upsideDownMounting = true; // uncomment this line if the MPU6050 is mounted upside-down
   Serial.println("Done!\n");
@@ -67,6 +70,22 @@ void setup() {
   // interrupts for encoders
   attachInterrupt(digitalPinToInterrupt(2), encoderHandler,  CHANGE); 
   attachInterrupt(digitalPinToInterrupt(3), encoderHandler, CHANGE);
+  long start = millis();
+ 
+  while(millis() - start < 2000){
+    mpu.update();
+     pid();
+    //  buzz();
+
+  }
+ start =millis();
+  while(millis() - start < 1000){
+    mpu.update();
+     pid();
+     buzz();
+
+  }
+  noTone(buzzer);
   
 
 
@@ -78,6 +97,7 @@ void loop() {
   mpu.update();
   pid();
   traversal();
+  checkNS();
 
 
 

@@ -45,7 +45,7 @@ void nrf_init(){
 void traversal(){
     radio.startListening();
 
-    delay(1);
+    delay(2);
 
     if (radio.available()) {
       radio.read(&received_data, sizeof(received_data));
@@ -63,10 +63,10 @@ void traversal(){
     // Serial.println(x_value);
     // Serial.println(y_value);
     if (x_value>700){
-      forward();
+      backward();
     }
     else if(x_value<300){
-      backward();
+      forward();
     }
     else{
       stopMotor();
@@ -74,10 +74,10 @@ void traversal(){
     }
 
     if (y_value>700){
-      setpoint--;
+      setpoint++;
     }
     else if(y_value<300){
-      setpoint++;
+      setpoint--;
     }
 
     

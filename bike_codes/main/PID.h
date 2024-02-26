@@ -25,13 +25,13 @@ void pid(){
       pid()
     */
   // reading the yaw value through the encoders setting the max yaw error to 35 so that the yaw control doesn't take charge 
-  float y = constrain(setpoint + yawAngle , -35, 35);//constrain(setpoint + yawAngle, -35, 35);// yawAngle;//mpu.getAngleZ(); 
+  float y = constrain(setpoint + mpu.getAngleZ() , -45,35);//constrain(setpoint + yawAngle, -35, 35);// yawAngle;//mpu.getAngleZ(); 
   float r_dot = mpu.getGyroX(); // read the r_dot value (angular velocity in roll) through teh gyroscope
   float y_dot = mpu.getGyroZ(); // read the y_dot value (angular velocity in yaw) through teh gyroscope
   float r = mpu.getAngleX() - Ky*y; //read the roll value and set the offset from it depending on the yaw
   iy += y; // yaw integral
 
-  Serial.print("\Setpoint:");Serial.println(setpoint);
+  // Serial.print("\Setpoint:");Serial.println(setpoint);
   // Serial.print("roll:");Serial.print(r);
   // Serial.print("\tyaw:");Serial.print(y);
   // Serial.print("\tr_dot:");Serial.print(r_dot);
